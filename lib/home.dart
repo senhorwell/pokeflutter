@@ -13,67 +13,71 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _counter = 0;
-
+  late List pokemons;
   void _incrementCounter() {
     setState(() {
       _counter++;
     });
   }
 
-  Future? loadPokedex() async {
+  loadPokedex() async {
     try {
       var response = await http.get(
-        Uri.parse('https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0'),
+        Uri.parse('https://www.pokemon.com/us/api/pokedex/kalos'),
+        headers: {
+          "content-type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, HEAD"
+        },
       );
-
       var responseJson = jsonDecode(response.body);
-      print(responseJson);
+      pokemons = responseJson;
       return responseJson;
     } catch (e) {
-      throw e.toString();
+      print(e);
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("PokeFlutter"),
-      ),
-      body: FutureBuilder(
-        future: loadPokedex(),
-        builder: (context, snapshot) {
-          if(!snapshot.hasData) {
+        appBar: AppBar(
+          title: const Text(
+            "PokeFlutter",
+            style: TextStyle(color: Colors.red),
+          ),
+          backgroundColor: Colors.white,
+        ),
+        body: FutureBuilder(
+          future: loadPokedex(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Center(
+                  child: LoadingAnimationWidget.beat(
+                      size: 200, color: Colors.red));
+            }
             return Center(
-              child: LoadingAnimationWidget.beat(
-                size: 200,
-                color: Colors.red
-              )
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: const AlwaysScrollableScrollPhysics(),
+                scrollDirection: Axis.vertical,
+                itemCount: pokemons.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15.0, vertical: 2),
+                    child: Card(
+                        child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Row(children: [
+                        Text(pokemons[index]["ThumbnailAltText"])
+                      ]),
+                    )),
+                  );
+                },
+              ),
             );
-          }
-          return Center(
-            child: ListView.builder(
-                  shrinkWrap: true,
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  scrollDirection: Axis.horizontal,
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                      child: Row(
-                        children: [
-                          Text(snapshot.data[index]["name"])
-                        ]
-                      )
-                    );
-                  },
-            ),
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
-    );
+          },
+        ));
   }
 }
