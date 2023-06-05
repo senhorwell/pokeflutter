@@ -19,15 +19,19 @@ class Pokemon {
   late String name;
 }
 
-class _PokemonDetailPageState extends State<PokemonDetailPage> {
-  var pokemon;
+class Damage {
+  late String name;
+  late double value;
 
-  late List doubleDamageFrom = [];
-  late List doubleDamageTo = [];
-  late List halfDamageFrom = [];
-  late List halfDamageTo = [];
-  late List noDamageFrom = [];
-  late List noDamageTo = [];
+  Damage(this.name, this.value);
+}
+
+class _PokemonDetailPageState extends State<PokemonDetailPage> {
+  late var pokemon;
+
+  late List<Damage> damageFrom = [];
+  late List<Damage> damageTo = [];
+  late List<Damage> damageGeneral = [];
 
   bool initialized = false;
 
@@ -49,39 +53,168 @@ class _PokemonDetailPageState extends State<PokemonDetailPage> {
         for (int j = 0;
             j < responseJson["damage_relations"]["double_damage_from"].length;
             j++) {
-          doubleDamageFrom
-              .add(responseJson["damage_relations"]["double_damage_from"][j]);
+          var index = damageFrom.indexWhere((element) =>
+              element.name ==
+              responseJson["damage_relations"]["double_damage_from"][j]
+                  ["name"]);
+          if (index < 0) {
+            damageFrom.add(Damage(
+                responseJson["damage_relations"]["double_damage_from"][j]
+                    ["name"],
+                2));
+          } else {
+            damageFrom[index].value = damageFrom[index].value * 2;
+          }
+
+          index = damageGeneral.indexWhere((element) =>
+              element.name ==
+              responseJson["damage_relations"]["double_damage_from"][j]
+                  ["name"]);
+          if (index < 0) {
+            damageGeneral.add(Damage(
+                responseJson["damage_relations"]["double_damage_from"][j]
+                    ["name"],
+                2));
+          } else {
+            damageGeneral[index].value = damageGeneral[index].value * 2;
+          }
         }
         for (int j = 0;
             j < responseJson["damage_relations"]["double_damage_to"].length;
             j++) {
-          doubleDamageTo
-              .add(responseJson["damage_relations"]["double_damage_to"][j]);
+          var index = damageTo.indexWhere((element) =>
+              element.name ==
+              responseJson["damage_relations"]["double_damage_to"][j]["name"]);
+          if (index < 0) {
+            damageTo.add(Damage(
+                responseJson["damage_relations"]["double_damage_to"][j]["name"],
+                2));
+          } else {
+            damageTo[index].value = damageTo[index].value * 2;
+          }
+
+          index = damageGeneral.indexWhere((element) =>
+              element.name ==
+              responseJson["damage_relations"]["double_damage_to"][j]["name"]);
+          if (index < 0) {
+            damageGeneral.add(Damage(
+                responseJson["damage_relations"]["double_damage_to"][j]["name"],
+                2));
+          } else {
+            damageGeneral[index].value = damageGeneral[index].value * 2;
+          }
         }
         for (int j = 0;
             j < responseJson["damage_relations"]["half_damage_from"].length;
             j++) {
-          halfDamageFrom
-              .add(responseJson["damage_relations"]["half_damage_from"][j]);
+          var index = damageFrom.indexWhere((element) =>
+              element.name ==
+              responseJson["damage_relations"]["half_damage_from"][j]["name"]);
+          if (index < 0) {
+            damageFrom.add(Damage(
+                responseJson["damage_relations"]["half_damage_from"][j]["name"],
+                0.5));
+          } else {
+            damageFrom[index].value = damageFrom[index].value / 2;
+          }
+
+          index = damageGeneral.indexWhere((element) =>
+              element.name ==
+              responseJson["damage_relations"]["half_damage_from"][j]["name"]);
+          if (index < 0) {
+            damageGeneral.add(Damage(
+                responseJson["damage_relations"]["half_damage_from"][j]["name"],
+                0.5));
+          } else {
+            damageGeneral[index].value = damageGeneral[index].value / 2;
+          }
         }
         for (int j = 0;
             j < responseJson["damage_relations"]["half_damage_to"].length;
             j++) {
-          halfDamageTo
-              .add(responseJson["damage_relations"]["half_damage_to"][j]);
+          var index = damageTo.indexWhere((element) =>
+              element.name ==
+              responseJson["damage_relations"]["half_damage_to"][j]["name"]);
+          if (index < 0) {
+            damageTo.add(Damage(
+                responseJson["damage_relations"]["half_damage_to"][j]["name"],
+                0.5));
+          } else {
+            damageTo[index].value = damageTo[index].value / 2;
+          }
+
+          index = damageGeneral.indexWhere((element) =>
+              element.name ==
+              responseJson["damage_relations"]["half_damage_to"][j]["name"]);
+          if (index < 0) {
+            damageGeneral.add(Damage(
+                responseJson["damage_relations"]["half_damage_to"][j]["name"],
+                0.5));
+          } else {
+            damageGeneral[index].value = damageGeneral[index].value / 2;
+          }
         }
         for (int j = 0;
             j < responseJson["damage_relations"]["no_damage_from"].length;
             j++) {
-          noDamageFrom
-              .add(responseJson["damage_relations"]["no_damage_from"][j]);
+          var index = damageFrom.indexWhere((element) =>
+              element.name ==
+              responseJson["damage_relations"]["no_damage_from"][j]["name"]);
+          if (index < 0) {
+            damageFrom.add(Damage(
+                responseJson["damage_relations"]["no_damage_from"][j]["name"],
+                0.25));
+          } else {
+            damageFrom[index].value = damageFrom[index].value / 4;
+          }
+
+          index = damageGeneral.indexWhere((element) =>
+              element.name ==
+              responseJson["damage_relations"]["no_damage_from"][j]["name"]);
+          if (index < 0) {
+            damageGeneral.add(Damage(
+                responseJson["damage_relations"]["no_damage_from"][j]["name"],
+                0.25));
+          } else {
+            damageGeneral[index].value = damageGeneral[index].value / 4;
+          }
         }
         for (int j = 0;
             j < responseJson["damage_relations"]["no_damage_to"].length;
             j++) {
-          noDamageTo.add(responseJson["damage_relations"]["no_damage_to"][j]);
+          var index = damageTo.indexWhere((element) =>
+              element.name ==
+              responseJson["damage_relations"]["no_damage_to"][j]["name"]);
+          if (index < 0) {
+            damageTo.add(Damage(
+                responseJson["damage_relations"]["no_damage_to"][j]["name"],
+                0.25));
+          } else {
+            damageTo[index].value = damageTo[index].value / 4;
+          }
+
+          index = damageGeneral.indexWhere((element) =>
+              element.name ==
+              responseJson["damage_relations"]["no_damage_to"][j]["name"]);
+          if (index < 0) {
+            damageGeneral.add(Damage(
+                responseJson["damage_relations"]["no_damage_to"][j]["name"],
+                0.25));
+          } else {
+            damageGeneral[index].value = damageGeneral[index].value / 4;
+          }
         }
       }
+
+      damageFrom.sort((p1, p2) {
+        return Comparable.compare(p2.value, p1.value);
+      });
+      damageTo.sort((p1, p2) {
+        return Comparable.compare(p2.value, p1.value);
+      });
+      damageGeneral.sort((p1, p2) {
+        return Comparable.compare(p2.value, p1.value);
+      });
       return responseJson;
     } catch (e) {
       print(e);
@@ -134,9 +267,6 @@ class _PokemonDetailPageState extends State<PokemonDetailPage> {
               child: Card(
                 child: Column(
                   children: [
-                    SizedBox(
-                      height: 200,
-                    ),
                     Image.network(
                       'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${widget.id}.png',
                       loadingBuilder: (BuildContext context, Widget child,
@@ -178,69 +308,52 @@ class _PokemonDetailPageState extends State<PokemonDetailPage> {
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 25)),
                           ),
-                          doubleDamageFrom.isNotEmpty
+                          damageFrom.isNotEmpty
                               ? Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Column(
                                     children: [
-                                      const Text("Dano duplo"),
                                       SizedBox(
                                         width:
                                             MediaQuery.of(context).size.width /
-                                                3,
-                                        height: doubleDamageFrom.length * 20,
+                                                4,
+                                        height: damageFrom.length * 20,
                                         child: ListView.builder(
-                                            itemCount: doubleDamageFrom.length,
+                                            itemCount: damageFrom.length,
                                             itemBuilder: (context, index) {
                                               return Center(
                                                   child: Text(
-                                                      "${doubleDamageFrom[index]["name"]}"));
+                                                      "${damageFrom[index].value}x - ${damageFrom[index].name}"));
                                             }),
                                       ),
                                     ],
                                   ),
                                 )
                               : const SizedBox(),
-                          halfDamageFrom.isNotEmpty
+                        ]),
+                        Column(children: [
+                          const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text("General",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 25)),
+                          ),
+                          damageGeneral.isNotEmpty
                               ? Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Column(
                                     children: [
-                                      const Text("Dano reduzido"),
                                       SizedBox(
                                         width:
                                             MediaQuery.of(context).size.width /
-                                                3,
-                                        height: halfDamageFrom.length * 20,
+                                                4,
+                                        height: damageGeneral.length * 20,
                                         child: ListView.builder(
-                                            itemCount: halfDamageFrom.length,
+                                            itemCount: damageGeneral.length,
                                             itemBuilder: (context, index) {
                                               return Center(
                                                   child: Text(
-                                                      "${halfDamageFrom[index]["name"]}"));
-                                            }),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              : const SizedBox(),
-                          noDamageFrom.isNotEmpty
-                              ? Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    children: [
-                                      const Text("Sem dano"),
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                3,
-                                        height: noDamageFrom.length * 20,
-                                        child: ListView.builder(
-                                            itemCount: noDamageFrom.length,
-                                            itemBuilder: (context, index) {
-                                              return Center(
-                                                  child: Text(
-                                                      "${noDamageFrom[index]["name"]}"));
+                                                      "${damageGeneral[index].value}x - ${damageGeneral[index].name}"));
                                             }),
                                       ),
                                     ],
@@ -257,69 +370,22 @@ class _PokemonDetailPageState extends State<PokemonDetailPage> {
                                   fontWeight: FontWeight.bold, fontSize: 25),
                             ),
                           ),
-                          doubleDamageTo.isNotEmpty
+                          damageTo.isNotEmpty
                               ? Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Column(
                                     children: [
-                                      const Text("Dano duplo"),
                                       SizedBox(
                                         width:
                                             MediaQuery.of(context).size.width /
-                                                3,
-                                        height: doubleDamageTo.length * 20,
+                                                4,
+                                        height: damageTo.length * 20,
                                         child: ListView.builder(
-                                            itemCount: doubleDamageTo.length,
+                                            itemCount: damageTo.length,
                                             itemBuilder: (context, index) {
                                               return Center(
                                                   child: Text(
-                                                      "${doubleDamageTo[index]["name"]}"));
-                                            }),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              : const SizedBox(),
-                          halfDamageTo.isNotEmpty
-                              ? Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    children: [
-                                      const Text("Dano reduzido"),
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                3,
-                                        height: halfDamageTo.length * 20,
-                                        child: ListView.builder(
-                                            itemCount: halfDamageTo.length,
-                                            itemBuilder: (context, index) {
-                                              return Center(
-                                                  child: Text(
-                                                      "${halfDamageTo[index]["name"]}"));
-                                            }),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              : const SizedBox(),
-                          noDamageTo.isNotEmpty
-                              ? Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    children: [
-                                      const Text("Sem dano"),
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                3,
-                                        height: noDamageTo.length * 20,
-                                        child: ListView.builder(
-                                            itemCount: noDamageTo.length,
-                                            itemBuilder: (context, index) {
-                                              return Center(
-                                                  child: Text(
-                                                      "${noDamageTo[index]["name"]}"));
+                                                      "${damageTo[index].value}x - ${damageTo[index].name}"));
                                             }),
                                       ),
                                     ],
